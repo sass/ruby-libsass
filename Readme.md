@@ -1,7 +1,7 @@
-Libsass
+SassRuby
 =======
 
-Written by Hampton Catlin (@hcatlin) and Aaron Leung
+Written by Hampton Catlin
 
 About
 -----
