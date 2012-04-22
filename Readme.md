@@ -14,6 +14,12 @@ project. Where "alias SassC Sass" would provide a drop-in
 replacement. This is an ambitious goal, but hopefully we can 
 attain it.
 
+Setup
+-----
+
+    git submodules init
+    git submodules update
+
 
 Contribution Agreement
 ----------------------
