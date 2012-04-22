@@ -7,15 +7,10 @@ require 'rake/extensiontask'
 Gem::PackageTask.new($gemspec) do |pkg|
 end
 
-Rake::ExtensionTask.new('libsass', $gemspec) do |ext|
-  ext.lib_dir = 'lib/sassc'
-end
+Rake::ExtensionTask.new('libsass', $gemspec)
 
-task :run do
+task :run => :compile do
   require File.expand_path('../lib/sassc', __FILE__)
-  ptr = SassC::Lib.sass_new_context()
-  ctx = SassC::Lib::Context.new(ptr)
-  ctx[:input_string] = SassC::Lib.to_char("hi { width: 30px; }")
-  SassC::Lib.sass_compile(ctx)
-  puts ctx[:output_string]
+  engine = SassC::Engine.new(".hi { width: 30px; }")
+  puts engine.render.inspect
 end

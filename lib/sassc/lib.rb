@@ -6,7 +6,7 @@ module SassC
   # Represents the exact wrapper around libsass
   module Lib
     extend FFI::Library
-    ffi_lib File.join(File.dirname(__FILE__), 'libsass.bundle')
+    ffi_lib File.join(File.dirname(__FILE__), '../libsass.bundle')
     attach_function :sass_new_context, [], :pointer
     attach_function :sass_compile, [:pointer], :int32
     

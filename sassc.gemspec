@@ -9,7 +9,7 @@ $gemspec = Gem::Specification.new do |gem|
   gem.summary       = %q{libsass wrapper}
   gem.homepage      = "http://github.com/hcatlin/libsass"
 
-  gem.files         = `git ls-files`.split($\)
+  gem.files         = Dir["*", "ext/**/*", "lib/sassc.rb", "lib/sassc/*", "lib/sassc/**/*"]
   gem.executables   = []#gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   
