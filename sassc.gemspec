@@ -2,18 +2,20 @@
 #require File.expand_path('../lib/sassc', __FILE__)
 
 $gemspec = Gem::Specification.new do |gem|
+  gem.name          = "sassc"
   gem.authors       = ["Hampton Catlin", "Aaron Leung"]
   gem.email         = ["hcatlin@gmail.com"]
-  gem.description   = %q{A native implementation of the Sass language}
-  gem.summary       = %q{Native Sass}
+  gem.description   = %q{A Ruby wrapper for the libsass project}
+  gem.summary       = %q{libsass wrapper}
   gem.homepage      = "http://github.com/hcatlin/libsass"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = []#gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.name          = "sassc"
-  gem.extensions    = ["src/extconf.rb"]
-  gem.require_paths = ["lib", "src"]
+  
+  gem.platform = Gem::Platform::RUBY
+  gem.extensions    = ["ext/libsass/extconf.rb"]
+  gem.require_paths = ["lib", "exts"]
   gem.version       = "0.1"#SassC::VERSION
   
   gem.add_dependency('ffi')
