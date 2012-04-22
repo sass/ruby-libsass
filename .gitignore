@@ -1,3 +1,4 @@
+*.bundle
 src/Makefile
 .DS_Store
 tmp/
