@@ -17,8 +17,8 @@ attain it.
 Setup
 -----
 
-    git submodules init
-    git submodules update
+    git submodule init
+    git submodule update
 
 
 Contribution Agreement
