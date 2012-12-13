@@ -7,7 +7,7 @@ $gemspec = Gem::Specification.new do |gem|
   gem.email         = ["hcatlin@gmail.com"]
   gem.description   = %q{A Ruby wrapper for the libsass project}
   gem.summary       = %q{libsass wrapper}
-  gem.homepage      = "http://github.com/hcatlin/libsass"
+  gem.homepage      = "http://github.com/hcatlin/sassruby"
 
   gem.files         = Dir["*", "ext/**/*", "lib/sassc.rb", "lib/sassc/*", "lib/sassc/**/*"]
   gem.executables   = []#gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
