@@ -5,12 +5,12 @@ module SassC
   class Engine
     def initialize(input, options = {})
       @input = input
+      @options = options
     end
     
     def render
-      ptr = SassC::Lib.sass_new_context()
-      ctx = SassC::Lib::Context.new(ptr)
-      ctx[:input_string] = SassC::Lib.to_char(@input)
+      ctx = SassC::Lib::Context.create(@input, @options)
+      #puts ctx[:sass_options][:output_style]
       SassC::Lib.sass_compile(ctx)
       ctx[:output_string]
     end
