@@ -8,7 +8,15 @@ module SassC
     extend FFI::Library
     ffi_lib File.join(File.dirname(__FILE__), '../libsass.bundle')
     attach_function :sass_new_context, [], :pointer
+    attach_function :sass_new_file_context, [], :pointer
+    attach_function :sass_new_folder_context, [], :pointer
+    
+    attach_function :sass_free_context, [:pointer], :void
+    attach_function :sass_free_file_context, [:pointer], :void
+    attach_function :sass_free_folder_context, [:pointer], :void
+    
     attach_function :sass_compile, [:pointer], :int32
+    attach_function :sass_compile_file, [:pointer], :int32
     
     def self.to_char(string)
       # get the number of bytes in the key
