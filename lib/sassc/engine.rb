@@ -12,6 +12,7 @@ module SassC
       ctx = SassC::Lib::Context.create(@input, @options)
       #puts ctx[:sass_options][:output_style]
       SassC::Lib.sass_compile(ctx)
+      puts ctx[:error_status]
       ctx[:output_string]
     end
   end
