@@ -1,29 +1,29 @@
-require_relative 'sass_options'
+require_relative 'options'
 
 module SassC::Lib
   class Context < FFI::Struct
-    # struct sass_context {
-    #   const char* source_string;
-    #   char* output_string;
-    #   struct sass_options options;
-    #   int error_status;
-    #   char* error_message;
-    #   struct Sass_C_Function_Data* c_functions;
-    # };
-    layout :source_string,  :pointer,
-           :output_string, :string,
-           :sass_options,  SassOptions.ptr,
-           :error_status,  :int32,
-           :error_message, :string
+    STYLES = %w(nested expanded compact compressed)
+    SOURCE_COMMENTS = %w(none default map)
+
+    layout :source_string,    :pointer,
+           :output_string,    :string,
+           :options,          Options,
+           :error_status,     :int32,
+           :error_message,    :string
 
     def self.create(input_string, options = {})
       ptr = SassC::Lib.sass_new_context()
       ctx = SassC::Lib::Context.new(ptr)
-      ctx[:source_string] = SassC::Lib.to_char(input_string || "")
+
+      ctx[:source_string] = FFI::MemoryPointer.from_string(input_string || "")
+     
+      ctx[:options][:output_style]     = STYLES.index(options[:output_style] || "nested")
+      ctx[:options][:source_comments]  = SOURCE_COMMENTS.index(options[:source_comments] || "none")
+
+      ctx[:options][:include_paths]    = FFI::MemoryPointer.from_string(options[:include_paths] || "")
+      ctx[:options][:image_path]       = FFI::MemoryPointer.from_string(options[:image_path] || "")
       
-      # TODO: Disabled the options. For some reason doing this line breaks everything!
-      # ctx[:sass_options] = SassOptions.create(options)
-      return ctx
+      ctx
     end
   end
 end

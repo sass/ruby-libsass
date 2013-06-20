@@ -1,5 +1,5 @@
-
 require_relative 'lib'
+require_relative 'error'
 
 module SassC
   class Engine
@@ -10,9 +10,13 @@ module SassC
     
     def render
       ctx = SassC::Lib::Context.create(@input, @options)
-      #puts ctx[:sass_options][:output_style]
+
       SassC::Lib.sass_compile(ctx)
-      puts ctx[:error_status]
+
+      if ctx[:error_status] == 1
+        raise SyntaxError.new(ctx[:error_message])
+      end
+
       ctx[:output_string]
     end
   end

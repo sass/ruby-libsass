@@ -20,4 +20,8 @@ $gemspec = Gem::Specification.new do |gem|
   
   gem.add_dependency('ffi')
   gem.add_dependency('rake-compiler')
+
+  gem.add_development_dependency("guard")
+  gem.add_development_dependency("guard-test")
+
 end
