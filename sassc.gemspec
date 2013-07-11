@@ -16,7 +16,7 @@ $gemspec = Gem::Specification.new do |gem|
   gem.platform = Gem::Platform::RUBY
   gem.extensions    = ["ext/libsass/extconf.rb"]
   gem.require_paths = ["lib", "exts"]
-  gem.version       = "0.1"#SassC::VERSION
+  gem.version       = "0.2"#SassC::VERSION
   
   gem.add_dependency('ffi')
   gem.add_dependency('rake-compiler')
