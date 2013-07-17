@@ -22,6 +22,8 @@ module SassC::Lib
 
       ctx[:options][:include_paths]    = FFI::MemoryPointer.from_string(options[:include_paths] || "")
       ctx[:options][:image_path]       = FFI::MemoryPointer.from_string(options[:image_path] || "")
+
+      ctx[:options][:takana_path]       = FFI::MemoryPointer.from_string(options[:takana_path] || "")
       
       ctx
     end
