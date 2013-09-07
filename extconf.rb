@@ -6,7 +6,7 @@ $CFLAGS << " #{ENV["CFLAGS"]}"
 $LIBS << " #{ENV["LIBS"]}"
 
 if Dir[File.expand_path('ext/libsass/*', __FILE__)].empty? 
-  Dir.chdir(File.expand_path('.', __FILE__)) do
+  Dir.chdir(File.dirname(__FILE__)) do
     xsystem('git submodule init')
     xsystem('git submodule update')
   end
