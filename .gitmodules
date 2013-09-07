@@ -1,4 +1,4 @@
 
 [submodule "ext/libsass"]
 	path = ext/libsass
-	url = http://github.com/nc/libsass
+	url = http://github.com/hcatlin/libsass
