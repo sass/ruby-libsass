@@ -13,8 +13,8 @@ module SassC
 
       SassC::Lib.sass_compile(ctx)
 
-      if ctx[:error_status] == 1
-        raise SyntaxError.new(ctx[:error_message])
+      if ctx[:error_status] != 0
+        raise SyntaxError.new("Sass error #{ctx[:error_message]}")
       end
 
       ctx[:output_string]

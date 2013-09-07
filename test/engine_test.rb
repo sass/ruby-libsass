@@ -17,7 +17,7 @@ class TestEngine < Test::Unit::TestCase
 
   def test_error_case
     assert_raise SassC::SyntaxError do
-      SassC::Engine.new("body { color: $undefined; }").render
+      SassC::Engine.new("body { color: $somevar; }12321321").render
     end
   end
 
