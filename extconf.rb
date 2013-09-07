@@ -12,6 +12,6 @@ if Dir[File.expand_path('ext/libsass/*', __FILE__)].empty?
   end
 end
 
-Dir.chdir(File.expand_path('ext/libsass', File.dirname(__FILE__))) do
-  create_makefile("libsass")  
-end
+Dir.chdir(File.expand_path('ext/libsass', File.dirname(__FILE__)))
+
+create_makefile("libsass")  
