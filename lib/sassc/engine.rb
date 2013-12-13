@@ -1,5 +1,5 @@
 
-require_relative 'lib'
+require 'sassc/lib'
 
 module SassC
   class Engine

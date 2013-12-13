@@ -1,4 +1,4 @@
-require_relative 'sass_options'
+require 'sassc/lib/sass_options'
 
 module SassC::Lib
   class Context < FFI::Struct

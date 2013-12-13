@@ -1,6 +1,6 @@
 require 'ffi'
 
-require_relative 'lib/context'
+require 'sassc/lib/context'
 
 module SassC
   # Represents the exact wrapper around libsass
