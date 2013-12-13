@@ -9,12 +9,17 @@ module SassC::Lib
     #   int error_status;
     #   char* error_message;
     #   struct Sass_C_Function_Data* c_functions;
+    #   char** included_files;
+    #   int num_included_files;
     # };
-    layout :source_string,  :pointer,
-           :output_string, :string,
-           :sass_options,  SassOptions.ptr,
-           :error_status,  :int32,
-           :error_message, :string
+    layout :source_string, :pointer,
+      :output_string, :string,
+      :options, SassOptions,
+      :error_status, :int,
+      :error_message, :string,
+      :c_functions, :pointer,
+      :included_files, :pointer,
+      :num_included_files, :int
 
     def self.create(input_string, options = {})
       ptr = SassC::Lib.sass_new_context()
