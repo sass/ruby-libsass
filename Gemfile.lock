@@ -8,9 +8,9 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    ffi (1.0.11)
-    rake (0.9.2.2)
-    rake-compiler (0.8.1)
+    ffi (1.9.2)
+    rake (10.1.0)
+    rake-compiler (0.9.1)
       rake
 
 PLATFORMS
