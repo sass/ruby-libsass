@@ -6,7 +6,7 @@ describe SassC::Lib do
     SassC::Lib.sass_free_context(ptr)
   end
 
-  it "should should compile some scss with ffi api" do
+  it "should should compile scss with ffi api" do
     context = SassC::Lib::Context.new(SassC::Lib.sass_new_context)
     options = SassC::Lib::SassOptions.new
 
@@ -24,6 +24,13 @@ describe SassC::Lib do
 
     context[:output_string].should eq ".hello {\n  color: blue; }\n"
     SassC::Lib.sass_free_context(context)
+  end
+end
+
+describe SassC::Engine do
+  it "should compile scss" do
+    engine = SassC::Engine.new(".hello { color: blue; }")
+    engine.render.should eq ".hello {\n  color: blue; }\n"
   end
 end
 

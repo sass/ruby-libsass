@@ -17,14 +17,5 @@ module SassC
     
     attach_function :sass_compile, [:pointer], :int32
     attach_function :sass_compile_file, [:pointer], :int32
-    
-    def self.to_char(string)
-      # get the number of bytes in the key
-      bytecount = string.unpack("C*").size
-
-      # create a pointer to memory and write the file to it
-      ptr = FFI::MemoryPointer.new(:char, bytecount)
-      ptr.put_bytes(0, string, 0, bytecount)
-    end
   end
 end

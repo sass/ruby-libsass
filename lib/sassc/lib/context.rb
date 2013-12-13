@@ -24,11 +24,13 @@ module SassC::Lib
     def self.create(input_string, options = {})
       ptr = SassC::Lib.sass_new_context()
       ctx = SassC::Lib::Context.new(ptr)
-      ctx[:source_string] = SassC::Lib.to_char(input_string || "")
-      
-      # TODO: Disabled the options. For some reason doing this line breaks everything!
-      # ctx[:sass_options] = SassOptions.create(options)
-      return ctx
+      ctx[:source_string] = FFI::MemoryPointer.from_string(input_string || "")
+      ctx[:options] = SassOptions.create(options)
+      ctx
+    end
+
+    def free
+      SassC::Lib.sass_free_context(self)
     end
   end
 end

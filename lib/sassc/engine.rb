@@ -10,10 +10,15 @@ module SassC
     
     def render
       ctx = SassC::Lib::Context.create(@input, @options)
-      #puts ctx[:sass_options][:output_style]
-      SassC::Lib.sass_compile(ctx)
-      puts ctx[:error_status]
+      success = SassC::Lib.sass_compile(ctx)
+
+      unless success == 0
+        raise ctx[:error_status]
+      end
+
       ctx[:output_string]
+    ensure
+      ctx && ctx.free
     end
   end
 end

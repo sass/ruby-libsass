@@ -23,10 +23,10 @@ module SassC::Lib
       }.merge(options)
 
       struct = SassOptions.new
-      #struct[:output_style] = STYLES.index(options[:output_style])
-      #struct[:source_comjents] = SOURCE_COMMENTS.index(options[:source_comments])
-      #struct[:image_path] = SassC::Lib.to_char(options[:image_path])
-      #struct[:include_paths] = SassC::Lib.to_char(options[:include_paths])
+      struct[:output_style] = STYLES.index(options[:output_style])
+      struct[:source_comments] = SOURCE_COMMENTS.index(options[:source_comments])
+      struct[:image_path] = FFI::MemoryPointer.from_string(options[:image_path])
+      struct[:include_paths] = FFI::MemoryPointer.from_string(options[:include_paths])
       struct
     end
   end
