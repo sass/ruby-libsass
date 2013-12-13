@@ -32,5 +32,13 @@ describe SassC::Engine do
     engine = SassC::Engine.new(".hello { color: blue; }")
     engine.render.should eq ".hello {\n  color: blue; }\n"
   end
+
+
+  it "should get error message" do
+    engine = SassC::Engine.new(".hello { color: blue;")
+    expect do
+      engine.render
+    end.to raise_error
+  end
 end
 

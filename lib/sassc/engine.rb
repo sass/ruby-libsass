@@ -12,8 +12,8 @@ module SassC
       ctx = SassC::Lib::Context.create(@input, @options)
       success = SassC::Lib.sass_compile(ctx)
 
-      unless success == 0
-        raise ctx[:error_status]
+      unless ctx[:error_status] == 0
+        raise ctx[:error_message]
       end
 
       ctx[:output_string]
