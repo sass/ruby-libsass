@@ -25,6 +25,27 @@ describe SassC::Lib do
     context[:output_string].should eq ".hello {\n  color: blue; }\n"
     SassC::Lib.sass_free_context(context)
   end
+
+  it "should should register custom function" do
+    context = SassC::Lib::Context.new(SassC::Lib.sass_new_context)
+    options = SassC::Lib::SassOptions.new
+
+    options[:output_style] = 0
+    options[:source_comments] = 0
+    options[:image_path] = FFI::MemoryPointer.from_string("")
+    options[:include_paths] = FFI::MemoryPointer.from_string("")
+
+    context[:options] = options
+    context[:source_string] = FFI::MemoryPointer.from_string %{
+      .hello { color: blue; }
+    }
+
+    SassC::Lib.sass_compile(context)
+
+    context[:output_string].should eq ".hello {\n  color: blue; }\n"
+    SassC::Lib.sass_free_context(context)
+
+  end
 end
 
 describe SassC::Engine do
