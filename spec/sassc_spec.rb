@@ -35,14 +35,34 @@ describe SassC::Lib do
     options[:image_path] = FFI::MemoryPointer.from_string("")
     options[:include_paths] = FFI::MemoryPointer.from_string("")
 
+    # Create a list of functions
+    funcs_ptr = FFI::MemoryPointer.new(SassC::Lib::SassCFunctionDescriptor, 2)
+    funcs = 2.times.collect do |i|
+      SassC::Lib::SassCFunctionDescriptor.new(funcs_ptr + i * SassC::Lib::SassCFunctionDescriptor.size)
+    end
+
+    funcs[0][:signature] = FFI::MemoryPointer.from_string("custom_func()")
+    funcs[0][:function] = FFI::Function.new(SassC::Lib::SassValue.by_value, [SassC::Lib::SassValue.by_value]) do |val|
+      ret_value = SassC::Lib::SassValue.new()
+      ret_value[:string][:tag] = :SASS_STRING
+      ret_value[:string][:value] = FFI::MemoryPointer.from_string("hello world :)")
+
+      ret_value
+    end
+
+    funcs[1][:signature] = 0
+    funcs[1][:function] = 0
+
+    context[:c_functions] = funcs_ptr
+
     context[:options] = options
     context[:source_string] = FFI::MemoryPointer.from_string %{
-      .hello { color: blue; }
+      .hello { color: custom_func(); }
     }
 
     SassC::Lib.sass_compile(context)
 
-    context[:output_string].should eq ".hello {\n  color: blue; }\n"
+    context[:output_string].should eq ".hello {\n  color: hello world; }\n"
     SassC::Lib.sass_free_context(context)
 
   end

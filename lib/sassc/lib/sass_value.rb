@@ -1,6 +1,6 @@
 module SassC::Lib
   SassTag = enum(
-    :SASS_BOOLEAN, 1,
+    :SASS_BOOLEAN,
     :SASS_NUMBER,
     :SASS_COLOR,
     :SASS_STRING,
@@ -10,7 +10,7 @@ module SassC::Lib
   )
 
   SassSeparator = enum(
-    :SASS_COMMA, 1,
+    :SASS_COMMA,
     :SASS_SPACE
   )
 
@@ -62,7 +62,7 @@ module SassC::Lib
     #   char*         value;
     # };
     layout :tag, SassTag,
-      :value, :string
+      :value, :pointer
   end
 
   class SassList < FFI::Struct
@@ -106,6 +106,13 @@ module SassC::Lib
     #   struct Sass_Null    null;
     #   struct Sass_Error   error;
     # };
-    layout :unknown, :string
+    layout :unknown, SassUnknown,
+      :boolean, SassBoolean,
+      :number, SassNumber,
+      :color, SassColor,
+      :string, SassString,
+      :list, SassList,
+      :null, SassNull,
+      :error, SassError
   end
 end
