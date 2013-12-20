@@ -122,10 +122,12 @@ module SassC::Lib
       self[:separator] = :SASS_SPACE
 
       values_ptr = FFI::MemoryPointer.new(SassValue, num_values)
-      # num_values.times do |i|
-      #   SassValue.new(values_ptr + i).from_ruby(val[i])
-      #   SassValue.from_ruby(val[i], dest)
-      # end
+
+      num_values.times do |i|
+        SassValue.new(values_ptr + i * SassValue.size).from_ruby(val[i])
+      end
+
+      self[:values] = values_ptr
 
       self
     end
@@ -183,9 +185,7 @@ module SassC::Lib
       :null, SassNull,
       :error, SassError
 
-    def self.from_ruby(val)
-      out = SassC::Lib::SassValue.new()
-
+    def from_ruby(val)
       type_name = case val
       when String
         :string
@@ -203,7 +203,8 @@ module SassC::Lib
         raise "Don't know how to convert #{val.inspect} to sass value"
       end
 
-      out[type_name].from_ruby(val)
+      self[type_name].from_ruby(val)
+      self
     end
 
     def to_ruby

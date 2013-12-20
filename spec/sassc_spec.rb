@@ -162,13 +162,13 @@ describe SassC::Engine do
       @engine.render.should eq ".hello {\n  result: #ff8040; }\n"
     end
 
-    # it "should convert array" do
-    #   @engine.custom_function "test-func()" do
-    #     [1,2, "hello", false]
-    #   end
+    it "should convert array" do
+      @engine.custom_function "test-func()" do
+        [1,2, "hello", false]
+      end
 
-    #   @engine.render.should eq ".hello {\n  result: #ff8040; }\n"
-    # end
+      @engine.render.should eq ".hello {\n  result: 1 2 hello false; }\n"
+    end
   end
 end
 

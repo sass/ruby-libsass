@@ -40,7 +40,8 @@ module SassC::Lib
           signature, block = input
           fn[:signature] = FFI::MemoryPointer.from_string(signature)
           fn[:function] = FFI::Function.new(SassC::Lib::SassValue.by_value, [SassC::Lib::SassValue.by_value]) do |arg|
-            SassC::Lib::SassValue.from_ruby block.call arg.to_ruby
+            ret = SassC::Lib::SassValue.new()
+            ret.from_ruby block.call arg.to_ruby
           end
         end
 
