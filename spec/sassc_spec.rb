@@ -154,6 +154,14 @@ describe SassC::Engine do
       @engine.render.should eq ".hello {\n  result: 123; }\n"
     end
 
+    it "should convert number with unit" do
+      @engine.custom_function "test-func()" do
+        SassC::Engine::Number.new 123, "px"
+      end
+
+      @engine.render.should eq ".hello {\n  result: 123px; }\n"
+    end
+
     it "should convert color" do
       @engine.custom_function "test-func()" do
         SassC::Engine::Color.new(255, 128, 64)

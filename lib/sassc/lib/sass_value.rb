@@ -63,8 +63,13 @@ module SassC::Lib
     def from_ruby(val)
       self[:tag] = :SASS_NUMBER
       self[:value] = val
-      # TODO: unit
-      self[:unit] = FFI::MemoryPointer.from_string("")
+      unit = if val.respond_to? :unit
+        val.unit
+      else
+        ""
+      end
+
+      self[:unit] = FFI::MemoryPointer.from_string(unit)
       self
     end
 
@@ -234,7 +239,7 @@ module SassC::Lib
         :list
       when TrueClass, FalseClass
         :boolean
-      when Numeric
+      when Numeric, SassC::Engine::Number
         :number
       when SassC::Engine::Color
         :color
