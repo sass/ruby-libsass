@@ -103,10 +103,10 @@ describe SassC::Engine do
     engine = SassC::Engine.new(".hello { color: hello(yeah); }")
 
     engine.custom_function "hello($arg)" do |arg|
-      arg
+      "meets and greets"
     end
 
-    engine.render.should eq ".hello {\n  color: yeah; }\n"
+    engine.render.should eq ".hello {\n  color: meets and greets; }\n"
   end
 
 

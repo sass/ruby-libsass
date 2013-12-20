@@ -63,6 +63,17 @@ module SassC::Lib
     # };
     layout :tag, SassTag,
       :value, :pointer
+
+    def self.from_ruby(val)
+      ret_value = SassC::Lib::SassValue.new()
+      ret_value[:string][:tag] = :SASS_STRING
+      ret_value[:string][:value] = FFI::MemoryPointer.from_string(val)
+      ret_value
+    end
+
+    def to_ruby
+      self[:value].read_string
+    end
   end
 
   class SassList < FFI::Struct
@@ -76,6 +87,13 @@ module SassC::Lib
       :separator, SassSeparator,
       :length, :size_t,
       :values, :pointer
+
+    def to_ruby
+      values_ptr = self[:values]
+      self[:length].times.map do |i|
+        SassValue.new(values_ptr + i).to_ruby
+      end
+    end
   end
 
   class SassNull < FFI::Struct
@@ -114,5 +132,25 @@ module SassC::Lib
       :list, SassList,
       :null, SassNull,
       :error, SassError
+
+    def self.from_ruby(val)
+      case val
+      when String
+        SassString.from_ruby(val)
+      else
+        raise "Don't know how to convert #{val.inspect} to sass value"
+      end
+    end
+
+    def to_ruby
+      case self[:unknown][:tag]
+      when :SASS_LIST
+        self[:list].to_ruby
+      when :SASS_STRING
+        self[:string].to_ruby
+      else
+        raise "don't know how to convert #{self[:unknown][:tag]} to ruby"
+      end
+    end
   end
 end
