@@ -164,9 +164,18 @@ module SassC::Lib
 
     def to_ruby
       values_ptr = self[:values]
-      self[:length].times.map do |i|
-        SassValue.new(values_ptr + i).to_ruby
+      arr = self[:length].times.map do |i|
+        SassValue.new(values_ptr + i * SassValue.size).to_ruby
       end
+
+      sep = case self[:separator]
+      when :SASS_SPACE
+        :" "
+      when :SASS_COMMA
+        :","
+      end
+
+      SassC::Engine::List.new arr, sep
     end
   end
 

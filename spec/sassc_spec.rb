@@ -228,12 +228,16 @@ describe SassC::Engine do
       engine.render
     end
 
-    # it "should convert list" do
-    #   engine = SassC::Engine.new(".hello { result: test-func(a,b); }")
-    #   engine.custom_function "test-func($arg1, $arg2)" do |arg|
-    #   end
-    #   engine.render
-    # end
+    it "should convert list" do
+      engine = SassC::Engine.new(".hello { result: test-func(1,2,(a b c)); }")
+      engine.custom_function "test-func($arg1, $arg2, $arg3)" do |arg|
+        arg.should eq [1, 2, ["a", "b", "c"]]
+        arg.separator.should eq :","
+        arg[2].separator.should eq :" "
+      end
+      engine.render
+    end
+
 
   end
 end
