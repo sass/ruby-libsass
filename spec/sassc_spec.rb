@@ -192,6 +192,16 @@ describe SassC::Engine do
       engine = SassC::Engine.new(".hello { result: test-func(20); }")
       engine.custom_function "test-func($arg)" do |arg|
         arg.should eq [20]
+        arg.first.unit.should eq ""
+      end
+      engine.render
+    end
+
+    it "should convert number with unit" do
+      engine = SassC::Engine.new(".hello { result: test-func(99px); }")
+      engine.custom_function "test-func($arg)" do |arg|
+        arg.should eq [99]
+        arg.first.unit.should eq "px"
       end
       engine.render
     end
@@ -237,8 +247,6 @@ describe SassC::Engine do
       end
       engine.render
     end
-
-
   end
 end
 

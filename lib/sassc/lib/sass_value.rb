@@ -69,7 +69,7 @@ module SassC::Lib
     end
 
     def to_ruby
-      self[:value]
+      SassC::Engine::Number.new self[:value], self[:unit].read_string
     end
   end
 
