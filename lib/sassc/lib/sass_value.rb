@@ -29,11 +29,10 @@ module SassC::Lib
     layout :tag, SassTag,
       :value, :int
 
-    def self.from_ruby(val)
-      ret_val = SassC::Lib::SassValue.new()
-      ret_val[:boolean][:tag] = :SASS_BOOLEAN
-      ret_val[:boolean][:value] = val ? 1 : 0
-      ret_val
+    def from_ruby(val)
+      self[:tag] = :SASS_BOOLEAN
+      self[:value] = val ? 1 : 0
+      self
     end
 
     def to_ruby
@@ -51,13 +50,12 @@ module SassC::Lib
       :value, :double,
       :unit, :pointer
 
-    def self.from_ruby(val)
-      ret_val = SassC::Lib::SassValue.new()
-      ret_val[:number][:tag] = :SASS_NUMBER
-      ret_val[:number][:value] = val
+    def from_ruby(val)
+      self[:tag] = :SASS_NUMBER
+      self[:value] = val
       # TODO: unit
-      ret_val[:number][:unit] = FFI::MemoryPointer.from_string("")
-      ret_val
+      self[:unit] = FFI::MemoryPointer.from_string("")
+      self
     end
   end
 
@@ -75,15 +73,13 @@ module SassC::Lib
       :b, :double,
       :a, :double
 
-    def self.from_ruby(val)
-      ret_val = SassC::Lib::SassValue.new()
-      ret_val[:color][:tag] = :SASS_COLOR
-      ret_val[:color][:r] = val.r
-      ret_val[:color][:g] = val.g
-      ret_val[:color][:b] = val.b
-      ret_val[:color][:a] = val.a
-      ret_val
-
+    def from_ruby(val)
+      self[:tag] = :SASS_COLOR
+      self[:r] = val.r
+      self[:g] = val.g
+      self[:b] = val.b
+      self[:a] = val.a
+      self
     end
   end
 
@@ -95,11 +91,10 @@ module SassC::Lib
     layout :tag, SassTag,
       :value, :pointer
 
-    def self.from_ruby(val)
-      ret_val = SassC::Lib::SassValue.new()
-      ret_val[:string][:tag] = :SASS_STRING
-      ret_val[:string][:value] = FFI::MemoryPointer.from_string(val)
-      ret_val
+    def from_ruby(val)
+      self[:tag] = :SASS_STRING
+      self[:value] = FFI::MemoryPointer.from_string(val)
+      self
     end
 
     def to_ruby
@@ -119,13 +114,12 @@ module SassC::Lib
       :length, :size_t,
       :values, :pointer
 
-    def self.from_ruby(val)
+    def from_ruby(val)
       num_values = val.count
 
-      ret_val = SassC::Lib::SassValue.new()
-      ret_val[:list][:tag] = :SASS_LIST
-      ret_val[:list][:length] = num_values
-      ret_val[:list][:separator] = :SASS_SPACE
+      self[:tag] = :SASS_LIST
+      self[:length] = num_values
+      self[:separator] = :SASS_SPACE
 
       values_ptr = FFI::MemoryPointer.new(SassValue, num_values)
       # num_values.times do |i|
@@ -133,7 +127,7 @@ module SassC::Lib
       #   SassValue.from_ruby(val[i], dest)
       # end
 
-      ret_val
+      self
     end
 
     def to_ruby
@@ -150,10 +144,9 @@ module SassC::Lib
     # };
     layout :tag, SassTag
 
-    def self.from_ruby()
-      ret_val = SassC::Lib::SassValue.new()
-      ret_val[:null][:tag] = :SASS_NULL
-      ret_val
+    def from_ruby(val)
+      self[:tag] = :SASS_NULL
+      self
     end
 
     def to_ruby()
@@ -191,22 +184,26 @@ module SassC::Lib
       :error, SassError
 
     def self.from_ruby(val)
-      case val
+      out = SassC::Lib::SassValue.new()
+
+      type_name = case val
       when String
-        SassString.from_ruby(val)
+        :string
       when NilClass
-        SassNull.from_ruby()
+        :null
       when Array
-        SassList.from_ruby(val)
+        :list
       when TrueClass, FalseClass
-        SassBoolean.from_ruby(val)
+        :boolean
       when Numeric
-        SassNumber.from_ruby(val)
+        :number
       when SassC::Engine::Color
-        SassColor.from_ruby(val)
+        :color
       else
         raise "Don't know how to convert #{val.inspect} to sass value"
       end
+
+      out[type_name].from_ruby(val)
     end
 
     def to_ruby
