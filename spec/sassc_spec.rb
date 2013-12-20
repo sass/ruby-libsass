@@ -36,8 +36,9 @@ describe SassC::Lib do
     options[:include_paths] = FFI::MemoryPointer.from_string("")
 
     # Create a list of functions
-    funcs_ptr = FFI::MemoryPointer.new(SassC::Lib::SassCFunctionDescriptor, 2)
-    funcs = 2.times.collect do |i|
+    num_funcs = 3
+    funcs_ptr = FFI::MemoryPointer.new(SassC::Lib::SassCFunctionDescriptor, num_funcs)
+    funcs = num_funcs.times.collect do |i|
       SassC::Lib::SassCFunctionDescriptor.new(funcs_ptr + i * SassC::Lib::SassCFunctionDescriptor.size)
     end
 
@@ -50,19 +51,43 @@ describe SassC::Lib do
       ret_value
     end
 
-    funcs[1][:signature] = 0
-    funcs[1][:function] = 0
+    funcs[1][:signature] = FFI::MemoryPointer.from_string("custom_func2($arg)")
+    funcs[1][:function] = FFI::Function.new(SassC::Lib::SassValue.by_value, [SassC::Lib::SassValue.by_value]) do |val|
+      arg_value = case val[:unknown][:tag]
+      when :SASS_LIST
+        list = val[:list]
+        len = list[:length]
+        first_arg = SassC::Lib::SassValue.new(list[:values])
+        case first_arg[:unknown][:tag]
+        when :SASS_STRING
+          first_arg[:string][:value].read_string
+        else
+          raise "unknown type"
+        end
+      else
+        raise "unknown argument type"
+      end
+
+      ret_value = SassC::Lib::SassValue.new()
+      ret_value[:string][:tag] = :SASS_STRING
+      ret_value[:string][:value] = FFI::MemoryPointer.from_string("<<#{arg_value}>>")
+      ret_value
+    end
+
+    funcs[2][:signature] = 0
+    funcs[2][:function] = 0
 
     context[:c_functions] = funcs_ptr
 
     context[:options] = options
     context[:source_string] = FFI::MemoryPointer.from_string %{
       .hello { color: custom_func(); }
+      .world { color: custom_func2("hello world"); }
     }
 
     SassC::Lib.sass_compile(context)
 
-    context[:output_string].should eq ".hello {\n  color: hello world; }\n"
+    context[:output_string].should eq ".hello {\n  color: hello world :); }\n\n.world {\n  color: <<\"hello world\">>; }\n"
     SassC::Lib.sass_free_context(context)
 
   end
