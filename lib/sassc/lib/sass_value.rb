@@ -9,6 +9,16 @@ module SassC::Lib
     :SASS_ERROR
   )
 
+  TAG_TO_FIELD = {
+    :SASS_BOOLEAN => :boolean,
+    :SASS_NUMBER => :number,
+    :SASS_COLOR => :color,
+    :SASS_STRING => :string,
+    :SASS_LIST => :list,
+    :SASS_NULL => :null,
+    :SASS_ERROR => :error
+  }
+
   SassSeparator = enum(
     :SASS_COMMA,
     :SASS_SPACE
@@ -36,7 +46,7 @@ module SassC::Lib
     end
 
     def to_ruby
-      self[:boolean][:value] == 1
+      self[:value] == 1
     end
   end
 
@@ -56,6 +66,10 @@ module SassC::Lib
       # TODO: unit
       self[:unit] = FFI::MemoryPointer.from_string("")
       self
+    end
+
+    def to_ruby
+      self[:value]
     end
   end
 
@@ -80,6 +94,10 @@ module SassC::Lib
       self[:b] = val.b
       self[:a] = val.a
       self
+    end
+
+    def to_ruby
+      SassC::Engine::Color.new(self[:r], self[:g], self[:b], self[:a])
     end
   end
 
@@ -220,14 +238,12 @@ module SassC::Lib
     end
 
     def to_ruby
-      case self[:unknown][:tag]
-      when :SASS_LIST
-        self[:list].to_ruby
-      when :SASS_STRING
-        self[:string].to_ruby
-      else
+      field = TAG_TO_FIELD[self[:unknown][:tag]]
+      unless field
         raise "don't know how to convert #{self[:unknown][:tag]} to ruby"
       end
+
+      self[field].to_ruby
     end
   end
 end

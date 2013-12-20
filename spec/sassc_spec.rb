@@ -178,5 +178,63 @@ describe SassC::Engine do
       @engine.render.should eq ".hello {\n  result: 1, 2, hello, false; }\n"
     end
   end
+
+  describe "converting sass types to ruby types" do
+    it "should convert string" do
+      engine = SassC::Engine.new(".hello { result: test-func('hi'); }")
+      engine.custom_function "test-func($arg)" do |arg|
+        arg.should eq ["'hi'"]
+      end
+      engine.render
+    end
+
+    it "should convert number" do
+      engine = SassC::Engine.new(".hello { result: test-func(20); }")
+      engine.custom_function "test-func($arg)" do |arg|
+        arg.should eq [20]
+      end
+      engine.render
+    end
+
+    it "should convert boolean" do
+      engine = SassC::Engine.new(".hello { result: test-func(true); }")
+      engine.custom_function "test-func($arg)" do |arg|
+        arg.should eq [true]
+      end
+      engine.render
+    end
+
+    it "should convert color" do
+      engine = SassC::Engine.new(".hello { result: test-func(#dadfed); }")
+      engine.custom_function "test-func($arg)" do |arg|
+        arg.should eq [SassC::Engine::Color.new(218, 223, 237, 1)]
+      end
+      engine.render
+    end
+
+    it "should convert null" do
+      engine = SassC::Engine.new(".hello { result: test-func(null); }")
+      engine.custom_function "test-func($arg)" do |arg|
+        arg.should eq [nil]
+      end
+      engine.render
+    end
+
+    it "should convert null" do
+      engine = SassC::Engine.new(".hello { result: test-func(null); }")
+      engine.custom_function "test-func($arg)" do |arg|
+        arg.should eq [nil]
+      end
+      engine.render
+    end
+
+    # it "should convert list" do
+    #   engine = SassC::Engine.new(".hello { result: test-func(a,b); }")
+    #   engine.custom_function "test-func($arg1, $arg2)" do |arg|
+    #   end
+    #   engine.render
+    # end
+
+  end
 end
 
