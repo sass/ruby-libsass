@@ -116,5 +116,59 @@ describe SassC::Engine do
       engine.render
     end.to raise_error
   end
+
+  describe "converting ruby types to sass types" do
+    before :each do
+      @engine = SassC::Engine.new(".hello { result: test-func(); }")
+    end
+
+    it "should convert string" do
+      @engine.custom_function "test-func()" do
+        "hello"
+      end
+
+      @engine.render.should eq ".hello {\n  result: hello; }\n"
+    end
+
+    it "should convert nil" do
+      @engine.custom_function "test-func()" do
+        nil
+      end
+
+      @engine.render.should eq ".hello {\n  result: null; }\n"
+    end
+
+    it "should convert boolean" do
+      @engine.custom_function "test-func()" do
+        true
+      end
+
+      @engine.render.should eq ".hello {\n  result: true; }\n"
+    end
+
+    it "should convert number" do
+      @engine.custom_function "test-func()" do
+        123
+      end
+
+      @engine.render.should eq ".hello {\n  result: 123; }\n"
+    end
+
+    it "should convert color" do
+      @engine.custom_function "test-func()" do
+        SassC::Engine::Color.new(255, 128, 64)
+      end
+
+      @engine.render.should eq ".hello {\n  result: #ff8040; }\n"
+    end
+
+    # it "should convert array" do
+    #   @engine.custom_function "test-func()" do
+    #     [1,2, "hello", false]
+    #   end
+
+    #   @engine.render.should eq ".hello {\n  result: #ff8040; }\n"
+    # end
+  end
 end
 

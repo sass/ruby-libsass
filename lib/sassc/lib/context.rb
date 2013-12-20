@@ -33,7 +33,7 @@ module SassC::Lib
       num_funcs = input_funcs.count + 1
       funcs_ptr = FFI::MemoryPointer.new(SassC::Lib::SassCFunctionDescriptor, num_funcs)
 
-      num_funcs.times.map do |i|
+      num_funcs.times.each do |i|
         fn = SassC::Lib::SassCFunctionDescriptor.new(funcs_ptr + i * SassC::Lib::SassCFunctionDescriptor.size)
 
         if input = input_funcs[i]

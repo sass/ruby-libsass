@@ -32,3 +32,5 @@ module SassC
     end
   end
 end
+
+require "sassc/engine/color"
