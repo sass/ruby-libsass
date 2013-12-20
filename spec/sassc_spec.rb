@@ -169,6 +169,14 @@ describe SassC::Engine do
 
       @engine.render.should eq ".hello {\n  result: 1 2 hello false; }\n"
     end
+
+    it "should convert list" do
+      @engine.custom_function "test-func()" do
+        SassC::Engine::List.new([1,2, "hello", false], ",")
+      end
+
+      @engine.render.should eq ".hello {\n  result: 1, 2, hello, false; }\n"
+    end
   end
 end
 

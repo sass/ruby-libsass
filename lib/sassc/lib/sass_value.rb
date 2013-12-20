@@ -119,7 +119,19 @@ module SassC::Lib
 
       self[:tag] = :SASS_LIST
       self[:length] = num_values
-      self[:separator] = :SASS_SPACE
+
+      self[:separator] = if val.respond_to?(:separator)
+        case val.separator
+        when :" "
+         :SASS_SPACE
+        when :","
+         :SASS_COMMA
+        else
+          raise "Unknown separator"
+        end
+      else
+        :SASS_SPACE
+      end
 
       values_ptr = FFI::MemoryPointer.new(SassValue, num_values)
 
