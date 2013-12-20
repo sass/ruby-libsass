@@ -29,6 +29,25 @@ module SassC::Lib
       ctx
     end
 
+    def set_custom_functions(input_funcs)
+      num_funcs = input_funcs.count + 1
+      funcs_ptr = FFI::MemoryPointer.new(SassC::Lib::SassCFunctionDescriptor, num_funcs)
+
+      num_funcs.times.map do |i|
+        fn = SassC::Lib::SassCFunctionDescriptor.new(funcs_ptr + i * SassC::Lib::SassCFunctionDescriptor.size)
+
+        if input = input_funcs[i]
+          signature, block = input
+          fn[:signature] = FFI::MemoryPointer.from_string(signature)
+          fn[:function] = FFI::Function.new(SassC::Lib::SassValue.by_value, [SassC::Lib::SassValue.by_value], &block)
+        end
+
+        fn
+      end
+
+      self[:c_functions] = funcs_ptr
+    end
+
     def free
       SassC::Lib.sass_free_context(self)
     end

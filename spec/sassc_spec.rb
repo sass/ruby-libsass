@@ -99,6 +99,16 @@ describe SassC::Engine do
     engine.render.should eq ".hello {\n  color: blue; }\n"
   end
 
+  it "should set a custom function" do
+    engine = SassC::Engine.new(".hello { color: hello(yeah); }")
+
+    engine.custom_function "hello($arg)" do |arg|
+      arg
+    end
+
+    engine.render.should eq ".hello {\n  color: yeah; }\n"
+  end
+
 
   it "should get error message" do
     engine = SassC::Engine.new(".hello { color: blue;")
