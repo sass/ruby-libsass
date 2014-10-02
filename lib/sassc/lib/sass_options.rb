@@ -9,23 +9,24 @@ module SassC::Lib
     #   char* include_paths;
     #   char* image_path;
     # };
-    layout :output_style,    :int32,
-           :source_comments, :int32,
-           :include_paths,   :pointer,
-           :image_path,      :pointer
+    layout :output_style, :int,
+      :source_comments, :int,
+      :include_paths, :pointer,
+      :image_path, :pointer
 
     def self.create(options = {})
       options = {
-        output_style: "nested", 
-        source_comments: "none", 
-        image_path: "images",
-        include_paths: ""}.merge(options)
+        :output_style => "nested",
+        :source_comments => "none",
+        :image_path => "images",
+        :include_paths => ""
+      }.merge(options)
 
       struct = SassOptions.new
-      #struct[:output_style] = STYLES.index(options[:output_style])
-      #struct[:source_comments] = SOURCE_COMMENTS.index(options[:source_comments])
-      #struct[:image_path] = SassC::Lib.to_char(options[:image_path])
-      #struct[:include_paths] = SassC::Lib.to_char(options[:include_paths])
+      struct[:output_style] = STYLES.index(options[:output_style])
+      struct[:source_comments] = SOURCE_COMMENTS.index(options[:source_comments])
+      struct[:image_path] = FFI::MemoryPointer.from_string(options[:image_path])
+      struct[:include_paths] = FFI::MemoryPointer.from_string(options[:include_paths])
       struct
     end
   end

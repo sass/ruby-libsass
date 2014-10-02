@@ -1,4 +1,4 @@
-SassRuby
+Ruby-Libsass
 =======
 
 Written by Hampton Catlin
