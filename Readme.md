@@ -1,5 +1,7 @@
-Ruby-Libsass
+Ruby-Libsass (DEPRECATED)
 =======
+
+Please use sassc-ruby instead!
 
 Written by Hampton Catlin
 
@@ -19,11 +21,5 @@ Setup
 
     git submodule init
     git submodule update
-
-
-Contribution Agreement
-----------------------
-
-Any contributions made to the project are seen as copyright assigned to Hampton Catlin. Your contribution warrants that you have the right to assign copyright on your work. This is to ensure that the project remains free and open -- similar to the Apache Foundation.
 
 
